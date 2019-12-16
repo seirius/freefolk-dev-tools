@@ -1,0 +1,70 @@
+version: '3.3'
+services:
+
+    freefolk-youtube:
+        build:
+            dockerfile: /home/andriy/freefolk/freefolk-youtube/Dockerfile
+            context: /home/andriy/freefolk/freefolk-youtube
+        environment:
+            PORT: 3000
+            YOUTUBE_API_KEY: 
+        ports:
+            - 3000:3000
+
+    freefolk-filemanager:
+        build:
+            dockerfile: /home/andriy/freefolk/freefolk-filemanager/Dockerfile
+            context: /home/andriy/freefolk/freefolk-filemanager
+        environment: 
+            PORT: 3001
+            REDIS_HOST: redis
+        volumes:
+            - /home/andriy/Downloads/files:/usr/src/app/files
+        ports:
+            - 3001:3001
+
+    freefolk-converter:
+        build:
+            dockerfile: /home/andriy/freefolk/freefolk-converter/Dockerfile
+            context: /home/andriy/freefolk/freefolk-converter
+        environment: 
+            FILE_MANAGER_HOST: http://freefolk-filemanager:3001
+            PORT: 3002
+        ports:
+            - 3002:3002
+
+    freefolk-queue:
+        build:
+            dockerfile: /home/andriy/freefolk/freefolk-queue/Dockerfile
+            context: /home/andriy/freefolk/freefolk-queue
+        environment: 
+            PORT: 3003
+            REDIS_HOST: redis
+        ports:
+            - 3003:3003
+
+    freefolk-download:
+        build:
+            dockerfile: /home/andriy/freefolk/freefolk-download/Dockerfile
+            context: /home/andriy/freefolk/freefolk-download
+        environment: 
+            PORT: 3004
+            YOUTUBE_ENDPOINT_HOST: http://freefolk-youtube:3000
+            FILE_MANAGER_HOST: http://freefolk-filemanager:3001
+            CONVERTER_HOST: http://freefolk-converter:3002
+            QUEUE_HOST: http://freefolk-queue:3003
+            MQTT_HOST: mqtt://mqtt
+        ports:
+            - 3004:3004
+
+    redis:
+        image: redis
+        ports:
+            - 6379:6379
+
+    mqtt:
+        image: eclipse-mosquitto
+        ports:
+            - 1883:1883
+            - 9001:9001
+      
