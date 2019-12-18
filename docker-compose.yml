@@ -3,8 +3,8 @@ services:
 
     freefolk-youtube:
         build:
-            dockerfile: /home/andriy/freefolk/freefolk-youtube/Dockerfile
-            context: /home/andriy/freefolk/freefolk-youtube
+            dockerfile: /Users/waavistudio/dev/freefolk/freefolk-youtube/Dockerfile
+            context: /Users/waavistudio/dev/freefolk/freefolk-youtube
         environment:
             PORT: 3000
             YOUTUBE_API_KEY: 
@@ -13,30 +13,31 @@ services:
 
     freefolk-filemanager:
         build:
-            dockerfile: /home/andriy/freefolk/freefolk-filemanager/Dockerfile
-            context: /home/andriy/freefolk/freefolk-filemanager
+            dockerfile: /Users/waavistudio/dev/freefolk/freefolk-filemanager/Dockerfile
+            context: /Users/waavistudio/dev/freefolk/freefolk-filemanager
         environment: 
             PORT: 3001
             REDIS_HOST: redis
         volumes:
-            - /home/andriy/Downloads/files:/usr/src/app/files
+            - /Users/waavistudio/Downloads/files:/usr/src/app/files
         ports:
             - 3001:3001
 
     freefolk-converter:
         build:
-            dockerfile: /home/andriy/freefolk/freefolk-converter/Dockerfile
-            context: /home/andriy/freefolk/freefolk-converter
+            dockerfile: /Users/waavistudio/dev/freefolk/freefolk-converter/Dockerfile
+            context: /Users/waavistudio/dev/freefolk/freefolk-converter
         environment: 
             FILE_MANAGER_HOST: http://freefolk-filemanager:3001
             PORT: 3002
+            MQTT_HOST: mqtt://mqtt
         ports:
             - 3002:3002
 
     freefolk-queue:
         build:
-            dockerfile: /home/andriy/freefolk/freefolk-queue/Dockerfile
-            context: /home/andriy/freefolk/freefolk-queue
+            dockerfile: /Users/waavistudio/dev/freefolk/freefolk-queue/Dockerfile
+            context: /Users/waavistudio/dev/freefolk/freefolk-queue
         environment: 
             PORT: 3003
             REDIS_HOST: redis
@@ -45,8 +46,8 @@ services:
 
     freefolk-download:
         build:
-            dockerfile: /home/andriy/freefolk/freefolk-download/Dockerfile
-            context: /home/andriy/freefolk/freefolk-download
+            dockerfile: /Users/waavistudio/dev/freefolk/freefolk-download/Dockerfile
+            context: /Users/waavistudio/dev/freefolk/freefolk-download
         environment: 
             PORT: 3004
             YOUTUBE_ENDPOINT_HOST: http://freefolk-youtube:3000
@@ -68,3 +69,9 @@ services:
             - 1883:1883
             - 9001:9001
       
+    nginx:
+        image: nginx
+        ports:
+            - 80:80
+        volumes:
+            - /Users/waavistudio/dev/freefolk/freefolk-dev-tools/nginx/conf.d:/etc/nginx/conf.d
