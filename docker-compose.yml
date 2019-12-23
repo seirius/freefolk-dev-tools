@@ -7,7 +7,7 @@ services:
             context: /home/andriy/dev/freefolk/freefolk-youtube
         environment:
             PORT: 3000
-            YOUTUBE_API_KEY: 
+            YOUTUBE_API_KEY: AIzaSyDt_dCzvULBfqX9k2r-9-XJ2nRiEEHhUqg
         ports:
             - 3000:3000
         volumes:
@@ -66,6 +66,21 @@ services:
             MQTT_HOST: mqtt://mqtt
         ports:
             - 3004:3004
+        volumes:
+            - /home/andriy/dev/freefolk/freefolk-download:/usr/src/app
+        entrypoint: "npm run start:dev"
+
+    freefolk-web:
+        build:
+            dockerfile: /home/andriy/dev/freefolk/freefolk-web/Dockerfile
+            context: /home/andriy/dev/freefolk/freefolk-web
+        ports:
+            - 3005:3005
+        volumes:
+            - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
+        entrypoint: "npm run start:dev"
+        environment: 
+            MQTT_HOST: mqtt://mqtt
 
     redis:
         image: redis
