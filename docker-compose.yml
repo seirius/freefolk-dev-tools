@@ -80,6 +80,7 @@ services:
             - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
         entrypoint: "npm run start:dev"
         environment: 
+            PORT: 3005
             MQTT_HOST: mqtt://mqtt
 
     redis:
