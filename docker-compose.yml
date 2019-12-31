@@ -2,51 +2,44 @@ version: '3.3'
 services:
 
     freefolk-youtube:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-youtube/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-youtube
+        build: ./../freefolk-youtube
         environment:
             PORT: 3000
             YOUTUBE_API_KEY: AIzaSyDt_dCzvULBfqX9k2r-9-XJ2nRiEEHhUqg
         ports:
             - 3000:3000
-        volumes:
-            - /home/andriy/dev/freefolk/freefolk-youtube:/usr/src/app
-        entrypoint: "npm run start:dev"
+        # volumes:
+        #     - /home/andriy/dev/freefolk/freefolk-youtube:/usr/src/app
+        # entrypoint: "npm run start:dev"
 
     freefolk-filemanager:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-filemanager/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-filemanager
+        build: ./../freefolk-filemanager
         environment: 
             PORT: 3001
             REDIS_HOST: redis
             FILE_EXPIRATION_TIME: 30
+            MQTT_HOST: mqtt://mqtt
         volumes:
             - /home/andriy/Downloads/files:/usr/src/app/files
-            - /home/andriy/dev/freefolk/freefolk-filemanager:/usr/src/app
+            # - /home/andriy/dev/freefolk/freefolk-filemanager:/usr/src/app
         ports:
             - 3001:3001
-        entrypoint: "npm run start:dev"
+        # entrypoint: "npm run start:dev"
 
     freefolk-converter:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-converter/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-converter
+        build: ./../freefolk-converter
         environment: 
             FILE_MANAGER_HOST: http://freefolk-filemanager:3001
             PORT: 3002
             MQTT_HOST: mqtt://mqtt
         ports:
             - 3002:3002
-        volumes:
-            - /home/andriy/dev/freefolk/freefolk-converter:/usr/src/app
-        entrypoint: "npm run start:dev"
+        # volumes:
+        #     - /home/andriy/dev/freefolk/freefolk-converter:/usr/src/app
+        # entrypoint: "npm run start:dev"
 
     freefolk-queue:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-queue/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-queue
+        build: ./../freefolk-queue
         environment: 
             PORT: 3003
             REDIS_HOST: redis
@@ -54,9 +47,7 @@ services:
             - 3003:3003
 
     freefolk-download:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-download/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-download
+        build: ./../freefolk-download
         environment: 
             PORT: 3004
             YOUTUBE_ENDPOINT_HOST: http://freefolk-youtube:3000
@@ -66,19 +57,18 @@ services:
             MQTT_HOST: mqtt://mqtt
         ports:
             - 3004:3004
-        volumes:
-            - /home/andriy/dev/freefolk/freefolk-download:/usr/src/app
-        entrypoint: "npm run start:dev"
+        # volumes:
+        #     - /home/andriy/dev/freefolk/freefolk-download:/usr/src/app
+        # entrypoint: "npm run start:dev"
 
     freefolk-web:
-        build:
-            dockerfile: /home/andriy/dev/freefolk/freefolk-web/Dockerfile
-            context: /home/andriy/dev/freefolk/freefolk-web
+        build: ./../freefolk-web
         ports:
             - 3005:3005
-        volumes:
-            - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
-        entrypoint: "npm run start:dev"
+            - 5000:5000
+        # volumes:
+        #     - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
+        # entrypoint: "npm run start:dev"
         environment: 
             PORT: 3005
             MQTT_HOST: mqtt://mqtt
@@ -99,4 +89,5 @@ services:
         ports:
             - 80:80
         volumes:
-            - /home/andriy/dev/freefolk/freefolk-dev-tools/nginx/conf.d:/etc/nginx/conf.d
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - /home/andriy/dev/freefolk/freefolk-renderer/dist:/var/www/freefolk.media
