@@ -2,112 +2,120 @@ version: '3.3'
 services:
 
     freefolk-youtube:
-        build: ./../freefolk-youtube
+        build: ./freefolk-youtube
         environment:
-            PORT: 3000
-            YOUTUBE_API_KEY: AIzaSyDt_dCzvULBfqX9k2r-9-XJ2nRiEEHhUqg
-            LOGGER_LEVEL: debug,log,error
-            MQTT_HOST: mqtt://mqtt
+            PORT: ${YOUTUBE_PORT}
+            YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+            LOGGER_LEVEL: ${LOGGER_LEVEL}
+            MQTT_HOST: ${MQTT_HOST}
         ports:
-            - 3000:3000
+            - ${YOUTUBE_PORT}:${YOUTUBE_PORT}
         # volumes:
         #     - /Users/waavistudio/dev/freefolk/freefolk-youtube:/usr/src/app
         # entrypoint: "npm run start:dev"
 
     freefolk-filemanager:
-        build: ./../freefolk-filemanager
+        build: ./freefolk-filemanager
         environment: 
-            PORT: 3001
-            REDIS_HOST: redis
-            FILE_EXPIRATION_TIME: 30
-            MQTT_HOST: mqtt://mqtt
+            PORT: ${FILEMANAGER_PORT}
+            REDIS_HOST: ${REDIS_HOST}
+            FILE_EXPIRATION_TIME: ${FILEMANAGER_EXPIRATION_TIME}
+            MQTT_HOST: ${MQTT_HOST}
         volumes:
-            - /Users/waavistudio/Downloads/files:/usr/src/app/files
+            - /home/andriy/Downloads/files:/usr/src/app/files
             # - /home/andriy/dev/freefolk/freefolk-filemanager:/usr/src/app
         ports:
-            - 3001:3001
+            - ${FILEMANAGER_PORT}:${FILEMANAGER_PORT}
         # entrypoint: "npm run start:dev"
 
     freefolk-converter:
-        build: ./../freefolk-converter
+        build: ./freefolk-converter
         environment: 
-            FILE_MANAGER_HOST: http://freefolk-filemanager:3001
-            PORT: 3002
-            MQTT_HOST: mqtt://mqtt
+            FILE_MANAGER_HOST: ${FILEMANAGER_INTERNAL_HOST}
+            PORT: ${CONVERTER_PORT}
+            MQTT_HOST: ${MQTT_HOST}
         ports:
-            - 3002:3002
+            - ${CONVERTER_PORT}:${CONVERTER_PORT}
         # volumes:
         #     - /home/andriy/dev/freefolk/freefolk-converter:/usr/src/app
         # entrypoint: "npm run start:dev"
 
     freefolk-queue:
-        build: ./../freefolk-queue
+        build: ./freefolk-queue
         environment: 
-            PORT: 3003
-            REDIS_HOST: redis
+            PORT: ${QUEUE_PORT}
+            REDIS_HOST: ${REDIS_HOST}
         ports:
-            - 3003:3003
+            - ${QUEUE_PORT}:${QUEUE_PORT}
 
     freefolk-download:
-        build: ./../freefolk-download
+        build: ./freefolk-download
         environment: 
-            PORT: 3004
-            YOUTUBE_ENDPOINT_HOST: http://freefolk-youtube:3000
-            FILE_MANAGER_HOST: http://freefolk-filemanager:3001
-            CONVERTER_HOST: http://freefolk-converter:3002
-            QUEUE_HOST: http://freefolk-queue:3003
-            MQTT_HOST: mqtt://mqtt
+            PORT: ${DOWNLOAD_PORT}
+            YOUTUBE_ENDPOINT_HOST: ${YOUTUBE_INTERNAL_HOST}
+            FILE_MANAGER_HOST: ${FILEMANAGER_INTERNAL_HOST}
+            CONVERTER_HOST: ${CONVERTER_INTERNAL_HOST}
+            QUEUE_HOST: ${QUEUE_INTERNAL_HOST}
+            MQTT_HOST: ${MQTT_HOST}
         ports:
-            - 3004:3004
+            - ${DOWNLOAD_PORT}:${DOWNLOAD_PORT}
         # volumes:
         #     - /home/andriy/dev/freefolk/freefolk-download:/usr/src/app
         # entrypoint: "npm run start:dev"
 
         
     freefolk-web:
-        build: ./../freefolk-web
+        build: ./freefolk-web
         ports:
-            - 3005:3005
-            - 5000:5000
+            - ${WEB_PORT}:${WEB_PORT}
+            - ${WEB_SOCKET_PORT}:${WEB_SOCKET_PORT}
         # volumes:
-        #     - /Users/waavistudio/dev/freefolk/freefolk-web:/usr/src/app
+        #     - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
         # entrypoint: "npm run start:dev"
         environment: 
-            PORT: 3005
-            MQTT_HOST: mqtt://mqtt
-            LOGGER_LEVEL: debug,log,error
+            PORT: ${WEB_PORT}
+            MQTT_HOST: ${MQTT_HOST}
+            LOGGER_LEVEL: ${LOGGER_LEVEL}
                         
-    freefolk-bot:
-        build: ./../freefolk-bot
-        environment:
-            PORT: 3006
-            BOT_KEY: '1035060034:AAFCUElY4d16iiUj34YtKcz84Cp-d4lycEA'
-            MQTT_HOST: mqtt://mqtt
-            YOUTUBE_HOST: http://freefolk-youtube:3000
-            DOWNLOAD_HOST: http://freefolk-download:3004
-            FILEMANAGER_HOST: http://freefolk-filemanager:3001
-            FILEMANAGER_PUBLIC_HOST: http://localhost:3001
-        volumes:
-            - /Users/waavistudio/dev/freefolk/freefolk-bot:/usr/src/app
-        entrypoint: "npm run start:dev"
+    # freefolk-bot:
+    #     build: ./freefolk-bot
+    #     environment:
+    #         PORT: ${BOT_PORT}
+    #         BOT_KEY: ${BOT_KEY}
+    #         MQTT_HOST: ${MQTT_HOST}
+    #         YOUTUBE_HOST: ${YOUTUBE_INTERNAL_HOST}
+    #         DOWNLOAD_HOST: ${DOWNLOAD_INTERNAL_HOST}
+    #         FILEMANAGER_HOST: ${FILEMANAGER_INTERNAL_HOST}
+    #         FILEMANAGER_PUBLIC_HOST: ${FILEMANAGER_PUBLIC_HOST}
+        # volumes:
+        #     - /home/andriy/dev/freefolk/freefolk-bot:/usr/src/app
+        # entrypoint: "npm run start:dev"
+        # ports:
+        #     - ${BOT_PORT}:${BOT_PORT}
+
+    freefolk-renderer:
+        image: nginx
         ports:
-            - 3006:3006
+            - ${RENDERER_PORT}:${RENDERER_PORT}
+        volumes:
+            - ./freefolk-renderer/nginx/conf.d:/etc/nginx/conf.d
+            - ./freefolk-renderer/dist:/var/www/freefolk.media
 
     redis:
         image: redis
         ports:
-            - 6379:6379
+            - ${REDIS_PORT}:${REDIS_PORT}
 
     mqtt:
         image: eclipse-mosquitto
         ports:
-            - 1883:1883
-            - 9001:9001
-      
+            - ${MQTT_PORT}:${MQTT_PORT}
+            - ${MQTT_PORT_W}:${MQTT_PORT_W}
+
     nginx:
         image: nginx
         ports:
-            - 80:80
+            - ${NGINX_PORT}:${NGINX_PORT}
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
-            - /Users/waavistudio/dev/freefolk/freefolk-renderer/dist:/var/www/freefolk.media
+            # - /home/andriy/dev/freefolk/freefolk-renderer/dist:/var/www/freefolk.media

@@ -1,0 +1,24 @@
+[submodule "freefolk-download"]
+	path = freefolk-download
+	url = git@github.com:seirius/freefolk-download.git
+[submodule "freefolk-youtube"]
+	path = freefolk-youtube
+	url = git@github.com:seirius/freefolk-youtube.git
+[submodule "freefolk-filemanager"]
+	path = freefolk-filemanager
+	url = git@github.com:seirius/freefolk-filemanager.git
+[submodule "freefolk-converter"]
+	path = freefolk-converter
+	url = git@github.com:seirius/freefolk-converter.git
+[submodule "freefolk-queue"]
+	path = freefolk-queue
+	url = git@github.com:seirius/freefolk-queue.git
+[submodule "freefolk-web"]
+	path = freefolk-web
+	url = git@github.com:seirius/freefolk-web.git
+[submodule "freefolk-bot"]
+	path = freefolk-bot
+	url = git@github.com:seirius/freefolk-bot.git
+[submodule "freefolk-renderer"]
+	path = freefolk-renderer
+	url = git@github.com:seirius/freefolk-renderer.git
