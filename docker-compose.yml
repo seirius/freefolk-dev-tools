@@ -94,12 +94,12 @@ services:
         #     - ${BOT_PORT}:${BOT_PORT}
 
     freefolk-renderer:
-        image: nginx
+        build: ./freefolk-renderer
         ports:
             - ${RENDERER_PORT}:${RENDERER_PORT}
-        volumes:
-            - ./freefolk-renderer/nginx/conf.d:/etc/nginx/conf.d
-            - ./freefolk-renderer/dist:/var/www/freefolk.media
+        # volumes:
+        #     - ./freefolk-renderer/nginx/conf.d:/etc/nginx/conf.d
+        #     - ./freefolk-renderer/dist:/var/www/freefolk.media
 
     redis:
         image: redis
