@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+
+    freefolk-youtube:
+        image: cloud.canister.io:5000/seirius/freefolk-youtube:latest
+        environment:
+            PORT: ${YOUTUBE_PORT}
+            YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+            LOGGER_LEVEL: ${LOGGER_LEVEL}
+            MQTT_HOST: ${MQTT_HOST}
+        restart: always
+        ports:
+            - ${YOUTUBE_PORT}:${YOUTUBE_PORT}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
+    
+    watchtower:
+        image: containrrr/watchtower
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./etc/watchtower/config.json:${DOCKER_CONFIG_PATH}
+        command: --interval 10 --cleanup

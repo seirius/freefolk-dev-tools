@@ -69,13 +69,11 @@ services:
         ports:
             - ${WEB_PORT}:${WEB_PORT}
             - ${WEB_SOCKET_PORT}:${WEB_SOCKET_PORT}
-        # volumes:
-        #     - /home/andriy/dev/freefolk/freefolk-web:/usr/src/app
-        # entrypoint: "npm run start:dev"
         environment: 
             PORT: ${WEB_PORT}
             MQTT_HOST: ${MQTT_HOST}
             LOGGER_LEVEL: ${LOGGER_LEVEL}
+            REDIS_HOST: ${REDIS_HOST}
                         
     # freefolk-bot:
     #     build: ./freefolk-bot
@@ -97,9 +95,8 @@ services:
         build: ./freefolk-renderer
         ports:
             - ${RENDERER_PORT}:${RENDERER_PORT}
-        # volumes:
-        #     - ./freefolk-renderer/nginx/conf.d:/etc/nginx/conf.d
-        #     - ./freefolk-renderer/dist:/var/www/freefolk.media
+        volumes:
+            - ./freefolk-renderer/dist:/var/www/freefolk.media
 
     redis:
         image: redis
@@ -118,4 +115,3 @@ services:
             - ${NGINX_PORT}:${NGINX_PORT}
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
-            # - /home/andriy/dev/freefolk/freefolk-renderer/dist:/var/www/freefolk.media
