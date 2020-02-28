@@ -26,6 +26,8 @@ services:
             - ${FILEMANAGER_PORT}:${FILEMANAGER_PORT}
         labels:
             - com.centurylinklabs.watchtower.enable=true
+        depends_on: 
+            - redis
 
     freefolk-converter:
         image: cloud.canister.io:5000/seirius/freefolk-converter:latest
@@ -35,6 +37,8 @@ services:
             MQTT_HOST: ${MQTT_HOST}
         ports:
             - ${CONVERTER_PORT}:${CONVERTER_PORT}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
 
     freefolk-queue:
         image: cloud.canister.io:5000/seirius/freefolk-queue:latest
@@ -43,6 +47,10 @@ services:
             REDIS_HOST: ${REDIS_HOST}
         ports:
             - ${QUEUE_PORT}:${QUEUE_PORT}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
+        depends_on: 
+            - redis
 
     freefolk-download:
         image: cloud.canister.io:5000/seirius/freefolk-download:latest
@@ -53,6 +61,8 @@ services:
             CONVERTER_HOST: ${CONVERTER_INTERNAL_HOST}
             QUEUE_HOST: ${QUEUE_INTERNAL_HOST}
             MQTT_HOST: ${MQTT_HOST}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
         ports:
             - ${DOWNLOAD_PORT}:${DOWNLOAD_PORT}
 
@@ -66,11 +76,17 @@ services:
             MQTT_HOST: ${MQTT_HOST}
             LOGGER_LEVEL: ${LOGGER_LEVEL}
             REDIS_HOST: ${REDIS_HOST}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
+        depends_on: 
+            - redis
 
     freefolk-renderer:
         image: cloud.canister.io:5000/seirius/freefolk-renderer:latest
         ports:
             - ${RENDERER_PORT}:${RENDERER_PORT}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
 
     redis:
         image: redis
@@ -89,10 +105,18 @@ services:
             - ${NGINX_PORT}:${NGINX_PORT}
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
+        depends_on: 
+            - freefolk-youtube
+            - freefolk-filemanager
+            - freefolk-converter
+            - freefolk-queue
+            - freefolk-download
+            - freefolk-web
+            - freefolk-renderer
 
     watchtower:
         image: containrrr/watchtower
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${DOCKER_CONFIG_PATH}:/config.json
-        command: --interval 10 --cleanup --label-enable
+        command: --interval 300 --cleanup --label-enable
