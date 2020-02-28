@@ -22,6 +22,7 @@ services:
             REDIS_HOST: ${REDIS_HOST}
             FILE_EXPIRATION_TIME: ${FILEMANAGER_EXPIRATION_TIME}
             MQTT_HOST: ${MQTT_HOST}
+        restart: always
         ports:
             - ${FILEMANAGER_PORT}:${FILEMANAGER_PORT}
         labels:
@@ -35,6 +36,7 @@ services:
             FILE_MANAGER_HOST: ${FILEMANAGER_INTERNAL_HOST}
             PORT: ${CONVERTER_PORT}
             MQTT_HOST: ${MQTT_HOST}
+        restart: always
         ports:
             - ${CONVERTER_PORT}:${CONVERTER_PORT}
         labels:
@@ -45,6 +47,7 @@ services:
         environment: 
             PORT: ${QUEUE_PORT}
             REDIS_HOST: ${REDIS_HOST}
+        restart: always
         ports:
             - ${QUEUE_PORT}:${QUEUE_PORT}
         labels:
@@ -61,6 +64,7 @@ services:
             CONVERTER_HOST: ${CONVERTER_INTERNAL_HOST}
             QUEUE_HOST: ${QUEUE_INTERNAL_HOST}
             MQTT_HOST: ${MQTT_HOST}
+        restart: always
         labels:
             - com.centurylinklabs.watchtower.enable=true
         ports:
@@ -71,6 +75,7 @@ services:
         ports:
             - ${WEB_PORT}:${WEB_PORT}
             - ${WEB_SOCKET_PORT}:${WEB_SOCKET_PORT}
+        restart: always
         environment: 
             PORT: ${WEB_PORT}
             MQTT_HOST: ${MQTT_HOST}
@@ -85,6 +90,7 @@ services:
         image: cloud.canister.io:5000/seirius/freefolk-renderer:latest
         ports:
             - ${RENDERER_PORT}:${RENDERER_PORT}
+        restart: always
         labels:
             - com.centurylinklabs.watchtower.enable=true
 
@@ -92,12 +98,14 @@ services:
         image: redis
         ports:
             - ${REDIS_PORT}:${REDIS_PORT}
+        restart: always
 
     mqtt:
         image: eclipse-mosquitto
         ports:
             - ${MQTT_PORT}:${MQTT_PORT}
             - ${MQTT_PORT_W}:${MQTT_PORT_W}
+        restart: always
 
     nginx:
         image: nginx
@@ -105,6 +113,7 @@ services:
             - ${NGINX_PORT}:${NGINX_PORT}
         volumes:
             - ./nginx/conf.d:/etc/nginx/conf.d
+        restart: always
         depends_on: 
             - freefolk-youtube
             - freefolk-filemanager
