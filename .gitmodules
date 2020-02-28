@@ -7,9 +7,6 @@
 [submodule "freefolk-filemanager"]
 	path = freefolk-filemanager
 	url = git@github.com:seirius/freefolk-filemanager.git
-[submodule "freefolk-converter"]
-	path = freefolk-converter
-	url = git@github.com:seirius/freefolk-converter.git
 [submodule "freefolk-queue"]
 	path = freefolk-queue
 	url = git@github.com:seirius/freefolk-queue.git
