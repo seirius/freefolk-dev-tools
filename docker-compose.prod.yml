@@ -19,5 +19,5 @@ services:
         image: containrrr/watchtower
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./etc/watchtower/config.json:${DOCKER_CONFIG_PATH}
-        command: --interval 10 --cleanup
+            - ${DOCKER_CONFIG_PATH}:/config.json
+        command: --interval 10 --cleanup --label-enable
