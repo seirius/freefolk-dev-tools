@@ -1,6 +1,3 @@
-[submodule "freefolk-download"]
-	path = freefolk-download
-	url = git@github.com:seirius/freefolk-download.git
 [submodule "freefolk-youtube"]
 	path = freefolk-youtube
 	url = git@github.com:seirius/freefolk-youtube.git
