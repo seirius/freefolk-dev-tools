@@ -69,6 +69,8 @@ services:
             - com.centurylinklabs.watchtower.enable=true
         ports:
             - ${DOWNLOAD_PORT}:${DOWNLOAD_PORT}
+        depends_on: 
+            - freefolk-queue
 
     freefolk-web:
         image: cloud.canister.io:5000/seirius/freefolk-web:latest
@@ -128,4 +130,4 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${DOCKER_CONFIG_PATH}:/config.json
-        command: --interval 300 --cleanup --label-enable
+        command: --interval ${DOCKER_PULL_INTERVAL} --cleanup --label-enable
