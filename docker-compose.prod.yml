@@ -43,7 +43,53 @@ services:
             REDIS_HOST: ${REDIS_HOST}
         ports:
             - ${QUEUE_PORT}:${QUEUE_PORT}
-    
+
+    freefolk-download:
+        image: cloud.canister.io:5000/seirius/freefolk-download:latest
+        environment: 
+            PORT: ${DOWNLOAD_PORT}
+            YOUTUBE_ENDPOINT_HOST: ${YOUTUBE_INTERNAL_HOST}
+            FILE_MANAGER_HOST: ${FILEMANAGER_INTERNAL_HOST}
+            CONVERTER_HOST: ${CONVERTER_INTERNAL_HOST}
+            QUEUE_HOST: ${QUEUE_INTERNAL_HOST}
+            MQTT_HOST: ${MQTT_HOST}
+        ports:
+            - ${DOWNLOAD_PORT}:${DOWNLOAD_PORT}
+
+    freefolk-web:
+        image: cloud.canister.io:5000/seirius/freefolk-web:latest
+        ports:
+            - ${WEB_PORT}:${WEB_PORT}
+            - ${WEB_SOCKET_PORT}:${WEB_SOCKET_PORT}
+        environment: 
+            PORT: ${WEB_PORT}
+            MQTT_HOST: ${MQTT_HOST}
+            LOGGER_LEVEL: ${LOGGER_LEVEL}
+            REDIS_HOST: ${REDIS_HOST}
+
+    freefolk-renderer:
+        image: cloud.canister.io:5000/seirius/freefolk-renderer:latest
+        ports:
+            - ${RENDERER_PORT}:${RENDERER_PORT}
+
+    redis:
+        image: redis
+        ports:
+            - ${REDIS_PORT}:${REDIS_PORT}
+
+    mqtt:
+        image: eclipse-mosquitto
+        ports:
+            - ${MQTT_PORT}:${MQTT_PORT}
+            - ${MQTT_PORT_W}:${MQTT_PORT_W}
+
+    nginx:
+        image: nginx
+        ports:
+            - ${NGINX_PORT}:${NGINX_PORT}
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+
     watchtower:
         image: containrrr/watchtower
         volumes:
