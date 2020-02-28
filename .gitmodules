@@ -16,9 +16,6 @@
 [submodule "freefolk-web"]
 	path = freefolk-web
 	url = git@github.com:seirius/freefolk-web.git
-[submodule "freefolk-bot"]
-	path = freefolk-bot
-	url = git@github.com:seirius/freefolk-bot.git
 [submodule "freefolk-renderer"]
 	path = freefolk-renderer
 	url = git@github.com:seirius/freefolk-renderer.git
