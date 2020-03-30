@@ -9,6 +9,10 @@ services:
             YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
             LOGGER_LEVEL: ${LOGGER_LEVEL}
             MQTT_HOST: ${MQTT_HOST}
+            REDIS_HOST: ${REDIS_HOST}
+            REDIS_PORT: ${REDIS_PORT}
+            REDIS_CACHE_DB: ${REDIS_CACHE_DB}
+            REDIS_ENABLED: ${REDIS_ENABLED}
         restart: always
         ports:
             - ${YOUTUBE_PORT}:${YOUTUBE_PORT}
