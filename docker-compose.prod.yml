@@ -134,4 +134,4 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${DOCKER_CONFIG_PATH}:/config.json
-        command: --interval ${DOCKER_PULL_INTERVAL} --cleanup --label-enable
+        command: --interval 120 --cleanup --label-enable
