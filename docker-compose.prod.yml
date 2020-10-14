@@ -113,6 +113,15 @@ services:
             - ${MQTT_PORT_W}:${MQTT_PORT_W}
         restart: always
 
+    freefolk-media:
+        image: cloud.canister.io:5000/seirius/freefolk-media
+        volumes:
+            - /home/andriy/Videos:/var/www/freefolk.media
+        ports:
+            - ${MEDIA_PORT}:${MEDIA_PORT}
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
+
     nginx:
         image: nginx
         ports:
@@ -128,6 +137,7 @@ services:
             - freefolk-download
             - freefolk-web
             - freefolk-renderer
+            - freefolk-media
 
     watchtower:
         image: containrrr/watchtower
